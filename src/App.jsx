@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import "./App.css";
 
 const CATEGORIES = {
   Food: { icon: "🍜", color: "#f97316" },
@@ -110,87 +111,6 @@ export default function ExpenseTracker() {
 
   return (
     <div style={{ fontFamily: "'Syne', sans-serif", background: "#f8fafc", minHeight: "100vh", color: "#0f172a" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #f8fafc; scrollbar-gutter: stable; }
-        html { scrollbar-gutter: stable; }
-        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: #f1f5f9; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .card { background: #fff; border-radius: 20px; border: 1px solid #e2e8f0; }
-        .tab-btn { background: none; border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; padding: 10px 20px; border-radius: 10px; transition: all 0.2s; color: #94a3b8; }
-        .tab-btn.active { background: #0f172a; color: #fff; }
-        .tab-btn:hover:not(.active) { background: #f1f5f9; color: #0f172a; }
-        .filter-chip { background: #f1f5f9; border: 1.5px solid transparent; color: #64748b; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 30px; transition: all 0.18s; }
-        .filter-chip.on { background: #fff; border-color: #0f172a; color: #0f172a; }
-        .filter-chip:hover:not(.on) { border-color: #cbd5e1; color: #334155; }
-        .btn-primary { background: #0f172a; color: #fff; border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 700; border-radius: 12px; padding: 12px 24px; font-size: 14px; transition: all 0.2s; letter-spacing: 0.3px; }
-        .btn-primary:hover { background: #1e293b; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(15,23,42,0.18); }
-        .btn-secondary { background: #f1f5f9; color: #0f172a; border: none; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 600; border-radius: 12px; padding: 12px 24px; font-size: 14px; transition: all 0.2s; }
-        .btn-secondary:hover { background: #e2e8f0; }
-        input, select, textarea { background: #f8fafc; border: 1.5px solid #e2e8f0; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; padding: 11px 14px; border-radius: 10px; width: 100%; font-size: 14px; outline: none; transition: border-color 0.2s; }
-        input:focus, select:focus, textarea:focus { border-color: #0f172a; background: #fff; }
-        input::placeholder, textarea::placeholder { color: #cbd5e1; }
-        select option { background: #fff; }
-        .modal-bg { position: fixed; inset: 0; background: rgba(15,23,42,0.5); backdrop-filter: blur(6px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .tx-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 14px; transition: background 0.15s; cursor: pointer; }
-        .tx-row:hover { background: #f8fafc; }
-        @keyframes pop { 0% { opacity:0; transform:scale(0.95) translateY(10px); } 100% { opacity:1; transform:scale(1) translateY(0); } }
-        .pop-in { animation: pop 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards; }
-        @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        .toast-anim { animation: toastIn 0.3s ease; }
-        .stat-card { border-radius: 20px; padding: 24px 28px; position: relative; overflow: hidden; }
-        .income-glow { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1.5px solid #a7f3d0; }
-        .expense-glow { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border: 1.5px solid #fecdd3; }
-        .balance-card { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: #fff; border: none; }
-        .type-toggle { display: flex; background: #f1f5f9; border-radius: 10px; padding: 4px; gap: 4px; }
-        .type-btn { flex: 1; padding: 9px; border: none; border-radius: 7px; cursor: pointer; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 13px; transition: all 0.2s; background: none; color: #94a3b8; }
-        .type-btn.sel { background: #fff; color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .type-btn.income.sel { color: #10b981; }
-        .type-btn.expense.sel { color: #f43f5e; }
-        
-        .hamburger { display: none; background: none; border: none; cursor: pointer; font-size: 24px; color: #0f172a; width: 40px; height: 40px; align-items: center; justify-content: center; padding: 0; }
-        .sidebar-overlay { display: none; }
-        
-        @media (max-width: 768px) {
-          .hamburger { display: flex; }
-          .layout-container { flex-direction: column !important; }
-          aside { position: fixed; left: 0; top: 0; height: 100vh; z-index: 99; transform: translateX(-100%); transition: transform 0.3s ease; box-shadow: 4px 0 12px rgba(0,0,0,0.1); }
-          aside.open { transform: translateX(0); }
-          .sidebar-overlay { display: none; }
-          .sidebar-overlay.open { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 98; }
-          main { padding: 16px 16px !important; }
-          h1 { font-size: 24px !important; margin: 16px 0 !important; }
-          .stat-cards-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-          .dashboard-2col { grid-template-columns: 1fr !important; gap: 16px !important; }
-          .analytics-2col { grid-template-columns: 1fr !important; gap: 16px !important; }
-          .modal-dialog { max-width: calc(100% - 40px) !important; }
-          .filter-row { flex-direction: column !important; gap: 10px !important; }
-          .search-box { min-width: 100% !important; }
-          .stat-card { padding: 16px 20px !important; }
-          .card { border-radius: 16px !important; }
-        }
-        
-        @media (max-width: 480px) {
-          main { padding: 12px 12px !important; }
-          h1 { font-size: 20px !important; margin: 12px 0 !important; }
-          .stat-card { padding: 12px 16px !important; font-size: 13px !important; }
-          .stat-card > div:first-child { font-size: 10px !important; margin-bottom: 6px !important; }
-          .stat-card > div:nth-child(2) { font-size: 24px !important; margin-bottom: 4px !important; }
-          input, select, textarea { font-size: 16px !important; padding: 10px 12px !important; }
-          .btn-primary, .btn-secondary { padding: 10px 16px !important; font-size: 13px !important; }
-          .modal-dialog { padding: 20px !important; }
-          .modal-dialog h2 { font-size: 18px !important; }
-          aside { width: 100% !important; padding: 20px 16px !important; }
-          .tx-row { gap: 10px !important; padding: 10px 8px !important; flex-wrap: wrap !important; }
-          .filter-row { gap: 8px !important; }
-          .filter-chip { padding: 4px 10px !important; font-size: 11px !important; }
-          .card { border-radius: 14px !important; padding: 12px 16px !important; }
-          .donut-legend { gap: 6px !important; }
-          .donut-legend > div { font-size: 12px !important; }
-        }
-      `}</style>
-
       {/* Toast */}
       {toast && (
         <div className="toast-anim" style={{ position: "fixed", bottom: 28, right: 28, zIndex: 200, background: toast.ok ? "#0f172a" : "#f43f5e", color: "#fff", padding: "13px 22px", borderRadius: 12, fontFamily: "'Plus Jakarta Sans'", fontSize: 14, fontWeight: 500, display: "flex", alignItems: "center", gap: 8, boxShadow: "0 8px 32px rgba(0,0,0,0.18)" }}>
