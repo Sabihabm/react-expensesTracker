@@ -58,46 +58,6 @@ README.md              # This file
 
 ---
 
-## ⚙️ Getting Started
-
-### Prerequisites
-
-- Node.js v18+
-- A React project (Vite, Create React App, or Next.js)
-
-### Installation
-
-1. Copy `expense-tracker.jsx` into your project's `src/` folder.
-
-2. Install dependencies (if not already present):
-
-```bash
-npm install react react-dom
-```
-
-3. Import and render the component in your entry file:
-
-```jsx
-// src/main.jsx or src/index.jsx
-import React from "react";
-import ReactDOM from "react-dom/client";
-import ExpenseTracker from "./expense-tracker";
-
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <ExpenseTracker />
-  </React.StrictMode>
-);
-```
-
-4. Start your dev server:
-
-```bash
-npm run dev
-```
-
----
-
 ## 🧩 Adding a Transaction
 
 1. Click the **+ Add Entry** button in the sidebar or top-right header.
